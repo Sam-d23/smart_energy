@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Energy Usage Dashboard</h2>
+{% if plot_path %}
+    <img src="{{ url_for('static', filename='plots/energy_usage.png') }}" alt="Energy Usage Plot">
+{% else %}
+    <p>No energy data available. Generate data first.</p>
+{% endif %}
+{% endblock %}
