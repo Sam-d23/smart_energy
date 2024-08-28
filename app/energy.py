@@ -12,12 +12,29 @@ bp = Blueprint('energy', __name__)
 @bp.route('/dashboard')
 @login_required
 def dashboard():
+    """
+    Render the dashboard page with an energy usage plot.
+
+    This view function generates energy data for the last week, plots
+    the energy usage, and renders the dashboard template with the plot.
+
+    Returns:
+        str: The rendered dashboard template with the path to the plot.
+    """
     generate_energy_data()
     plot_path = plot_energy_usage()
     return render_template('dashboard.html', plot_path=plot_path)
 
+
 def generate_energy_data():
-    # Generate energy data for the last week
+    """
+    Generate and save energy data for the last week.
+
+    This function creates hourly energy data points for the last 7 days,
+    simulating usage, temperature, and humidity values. The generated
+    data is associated with the currently logged-in user and saved to
+    the database.
+    """
     for i in range(7 * 24):  # 7 days, hourly data
         data = EnergyData(
             usage=round(0.5 + i * 0.02, 2),  # Example: increasing usage
@@ -28,11 +45,22 @@ def generate_energy_data():
         db.session.add(data)
     db.session.commit()
 
+
 def plot_energy_usage():
+    """
+    Plot energy usage data for the current user.
+
+    This function retrieves energy data for the currently logged-in user,
+    plots it, and saves the plot as an image file. The file path is returned.
+
+    Returns:
+        str: The file path to the saved plot image,
+        or None if no data is available.
+    """
     data = EnergyData.query.filter_by(user_id=current_user.id).all()
     if not data:
         return None
-    
+
     timestamps = [d.timestamp for d in data]
     usage = [d.usage for d in data]
 

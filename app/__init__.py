@@ -11,6 +11,17 @@ login_manager = LoginManager()
 
 
 def create_app():
+    """
+    Create and configure the Flask application.
+
+    This function initializes a Flask application, configures it using
+    the settings from the `Config` class, and sets up the database,
+    migration, and login manager. It also registers blueprints for the
+    application's routes.
+
+    Returns:
+        Flask: The configured Flask application.
+    """
     app = Flask(__name__)
     app.config.from_object(Config)
 
@@ -24,7 +35,5 @@ def create_app():
         app.register_blueprint(routes.routes)
         app.register_blueprint(auth.bp)
         app.register_blueprint(energy.bp)
-
-        #db.create_all()
 
     return app
